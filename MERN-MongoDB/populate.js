@@ -1,78 +1,107 @@
-// Create Users and Todos collections
-db.createCollection("Users");
-db.createCollection("Todos");
+// Remove all data from the collections
+db.Users.deleteMany({});
+db.Todos.deleteMany({});
+
 
 // Populate the Users collection with essential fields
 db.Users.insertMany([
     { 
         user_id: 1, 
         username: "supercoder", 
-        email: "supercoder@example.com", 
+        email: "supercoder@gmail.com", 
         password_hash: "$2a$10$examplehash1", 
         role: "admin" 
     },
     { 
         user_id: 2, 
         username: "techguru", 
-        email: "techguru@example.com", 
+        email: "techguru@hotmail.com", 
         password_hash: "$2a$10$examplehash2", 
         role: "user" 
     },
     { 
         user_id: 3, 
         username: "designwizard", 
-        email: "designwizard@example.com", 
+        email: "designwizard@outlook.com", 
         password_hash: "$2a$10$examplehash3", 
         role: "user" 
     },
     { 
         user_id: 4, 
         username: "datadynamo", 
-        email: "datadynamo@example.com", 
+        email: "datadynamo@gmail.com", 
         password_hash: "$2a$10$examplehash4", 
         role: "user" 
     },
     { 
         user_id: 5, 
         username: "cloudmaster", 
-        email: "cloudmaster@example.com", 
+        email: "cloudmaster@yahoo.com", 
         password_hash: "$2a$10$examplehash5", 
         role: "user" 
     },
     { 
         user_id: 6, 
         username: "codeartist", 
-        email: "codeartist@example.com", 
+        email: "codeartist@gmail.com", 
         password_hash: "$2a$10$examplehash6", 
         role: "user" 
     },
     { 
         user_id: 7, 
         username: "debuggerking", 
-        email: "debuggerking@example.com", 
+        email: "debuggerking@hotmail.com", 
         password_hash: "$2a$10$examplehash7", 
-        role: "user" 
+        role: "admin" 
     },
     { 
         user_id: 8, 
         username: "scriptninja", 
-        email: "scriptninja@example.com", 
+        email: "scriptninja@yahoo.com", 
         password_hash: "$2a$10$examplehash8", 
         role: "user" 
     },
     { 
         user_id: 9, 
         username: "webwarrior", 
-        email: "webwarrior@example.com", 
+        email: "webwarrior@outlook.com", 
         password_hash: "$2a$10$examplehash9", 
         role: "user" 
     },
     { 
         user_id: 10, 
         username: "devgenius", 
-        email: "devgenius@example.com", 
+        email: "devgenius@hotmail.com", 
         password_hash: "$2a$10$examplehash10", 
+        role: "admin" 
+    },
+    { 
+        user_id: 11, 
+        username: "taskmaster", 
+        email: "taskmaster@hotmail.com", 
+        password_hash: "$2a$10$examplehash11", 
         role: "user" 
+    },
+    { 
+        user_id: 12, 
+        username: "adminpro", 
+        email: "adminpro@yahoo.com", 
+        password_hash: "$2a$10$examplehash12", 
+        role: "admin" 
+    },
+    { 
+        user_id: 13, 
+        username: "user123", 
+        email: "user123@hotmail.com", 
+        password_hash: "$2a$10$examplehash13", 
+        role: "user" 
+    },
+    { 
+        user_id: 14, 
+        username: "admin456", 
+        email: "admin456@gmail.com", 
+        password_hash: "$2a$10$examplehash14", 
+        role: "admin" 
     }
 ]);
 
@@ -277,5 +306,105 @@ db.Todos.insertMany([
         due_date: new Date("2025-07-25"),
         priority: "medium",
         created_at: new Date("2025-06-10")
+    },
+    { 
+        todo_id: 21,
+        user_id: 2,
+        title: "Prepare presentation",
+        description: "Prepare slides for the upcoming meeting",
+        status: "pending",
+        due_date: new Date("2025-03-20"),
+        priority: "high",
+        created_at: new Date("2025-02-15")
+    },
+    { 
+        todo_id: 22,
+        user_id: 2,
+        title: "Update software",
+        description: "Update all software to the latest versions",
+        status: "pending",
+        due_date: new Date("2025-03-25"),
+        priority: "medium",
+        created_at: new Date("2025-02-20")
+    },
+    { 
+        todo_id: 23,
+        user_id: 3,
+        title: "Review project plan",
+        description: "Review and finalize the project plan",
+        status: "pending",
+        due_date: new Date("2025-04-05"),
+        priority: "high",
+        created_at: new Date("2025-03-01")
+    },
+    { 
+        todo_id: 24,
+        user_id: 4,
+        title: "Organize files",
+        description: "Organize and backup important files",
+        status: "pending",
+        due_date: new Date("2025-03-30"),
+        priority: "high",
+        created_at: new Date("2025-03-10")
+    },
+    { 
+        todo_id: 25,
+        user_id: 5,
+        title: "Plan team building",
+        description: "Plan a team building activity for the team",
+        status: "pending",
+        due_date: new Date("2025-04-10"),
+        priority: "medium",
+        created_at: new Date("2025-03-15")
+    },
+    { 
+        todo_id: 26,
+        user_id: 6,
+        title: "Write documentation",
+        description: "Write documentation for the new feature",
+        status: "pending",
+        due_date: new Date("2025-04-15"),
+        priority: "high",
+        created_at: new Date("2025-03-20")
+    },
+    { 
+        todo_id: 27,
+        user_id: 7,
+        title: "Fix security issues",
+        description: "Address security vulnerabilities in the application",
+        status: "pending",
+        due_date: new Date("2025-02-13"),
+        priority: "medium",
+        created_at: new Date("2025-01-25")
+    },
+    { 
+        todo_id: 28,
+        user_id: 8,
+        title: "Prepare budget report",
+        description: "Prepare the quarterly budget report",
+        status: "pending",
+        due_date: new Date("2025-04-25"),
+        priority: "medium",
+        created_at: new Date("2025-03-30")
+    },
+    { 
+        todo_id: 29,
+        user_id: 9,
+        title: "Organize training session",
+        description: "Organize a training session for new hires",
+        status: "pending",
+        due_date: new Date("2025-04-30"),
+        priority: "high",
+        created_at: new Date("2025-04-01")
+    },
+    { 
+        todo_id: 30,
+        user_id: 10,
+        title: "Review performance metrics",
+        description: "Review and analyze performance metrics",
+        status: "pending",
+        due_date: new Date("2025-05-05"),
+        priority: "medium",
+        created_at: new Date("2024-04-12")
     }
 ]);

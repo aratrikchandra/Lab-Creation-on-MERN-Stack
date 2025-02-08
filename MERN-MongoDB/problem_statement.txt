@@ -1,0 +1,72 @@
+
+Problem Statement:
+
+Welcome to your new role as a database engineer at TaskMaster, a cutting-edge task management platform designed to help users organize their lives efficiently. TaskMaster allows users to create, manage, and track their tasks seamlessly, with features like user authentication, role-based access (admin/user), and task prioritization. As the platform grows, managing user data and tasks effectively becomes critical to ensure a smooth user experience. Your task is to design and manage the TaskMaster database, ensuring it operates efficiently and supports the application's needs. Here's the journey you'll embark on to achieve this.
+
+In order to view the result of your query after execution, you can write them in below manner:
+
+const result = <Your Query>
+console.log(result)
+
+---
+
+Part 1: Setting Up TaskMaster Database
+
+TaskMaster has just launched, and you are tasked with setting up the foundational database structure. This is where it all starts—creating the backbone of the database to ensure that TaskMaster can store and manage its growing data efficiently.
+
+Database and Collection Setup:
+
+To Create a new database called TaskMaster and create the following collections within TaskMaster: Users and Todos along with populating all the collections created, run the command:
+
+mongosh localhost:27017/TaskMaster populate.js
+
+This command can be used to reset the TaskMaster database to its initial state.
+
+---
+
+Part 2: Querying for User and Task Insights
+
+TaskMaster wants to understand its users better, optimize task management, and enhance user satisfaction. You need to extract meaningful insights from the data to support these goals. These queries will help TaskMaster make informed decisions. Write the necessary queries in query1.js, query2.js, and query3.js files respectively.
+
+1. Retrieve all todos in the Todos collection that belong to a specific user with id 2 and have a status of "pending". Ensure the output includes todo_id, title, due_date, and priority.
+2. Find all todos with a priority of "high" and a due_date within the next 30 days (from the current date). Include todo_id, user_id, title, and due_date in the output.
+3. Retrieve all users who have the role "admin". Ensure the output includes user_id, username, and email.
+
+---
+
+Part 3: Updating the Database for Accurate Data
+
+To maintain an accurate and up-to-date database, you need to perform several updates. Think of this as ensuring that tasks are always relevant and up-to-date for users. Write the necessary queries in query4.js and query5.js files respectively.
+
+1. Change the priority of all todos with a status of "pending" and a due_date within the next 7 days to "high".
+2. Change the username and email of a specific user (user_id: 4) to a new username "jhon" and new email address "jhon@yahoo.com" and update the role to "admin".
+---
+
+Part 4: Cleaning Up the Database
+
+As part of routine maintenance, it's essential to clean up irrelevant or outdated data to keep the database efficient and performant. This is like tidying up the task list to ensure everything is in order. Write the necessary queries in query6.js and query7.js files respectively.
+
+1. Remove all todos from the Todos collection that have a status of "completed" or were created more than 60 days ago (from the current date).
+2. Remove all users who have a hotmail id as email
+---
+
+Database Schema Overview
+
+Users Collection:
+1. user_id (Unique identifier for each user)
+2. username (Unique username for login)
+3. email (Unique email for communication)
+4. password_hash (Hashed password for security)
+5. role (Role of the user: admin or user)
+
+Todos Collection:
+1. todo_id (Unique identifier for each todo)
+2. user_id (Reference to the user who owns the todo)
+3. title (Short description of the todo task)
+4. description (Detailed description of the todo task)
+5. status (Current status of the todo: pending, in progress, or completed)
+6. due_date (Deadline for the todo task)
+7. priority (Priority level of the todo: low, medium, or high)
+8. created_at (Timestamp when the todo was created)
+
+---
