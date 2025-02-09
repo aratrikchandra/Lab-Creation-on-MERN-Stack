@@ -1,0 +1,26 @@
+[
+  {
+    todo_id: 1,
+    title: 'Complete project report',
+    due_date: ISODate('2025-03-15T00:00:00.000Z'),
+    priority: 'high'
+  },
+  {
+    todo_id: 19,
+    title: 'Read a book',
+    due_date: ISODate('2025-06-30T00:00:00.000Z'),
+    priority: 'low'
+  },
+  {
+    todo_id: 21,
+    title: 'Prepare presentation',
+    due_date: ISODate('2025-03-20T00:00:00.000Z'),
+    priority: 'high'
+  },
+  {
+    todo_id: 22,
+    title: 'Update software',
+    due_date: ISODate('2025-03-25T00:00:00.000Z'),
+    priority: 'medium'
+  }
+]

@@ -1,0 +1,15 @@
+[
+  { user_id: 1, username: 'supercoder', email: 'supercoder@gmail.com' },
+  {
+    user_id: 7,
+    username: 'debuggerking',
+    email: 'debuggerking@hotmail.com'
+  },
+  {
+    user_id: 10,
+    username: 'devgenius',
+    email: 'devgenius@hotmail.com'
+  },
+  { user_id: 12, username: 'adminpro', email: 'adminpro@yahoo.com' },
+  { user_id: 14, username: 'admin456', email: 'admin456@gmail.com' }
+]

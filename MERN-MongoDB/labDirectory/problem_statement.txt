@@ -3,11 +3,15 @@ Problem Statement:
 
 Welcome to your new role as a database engineer at TaskMaster, a cutting-edge task management platform designed to help users organize their lives efficiently. TaskMaster allows users to create, manage, and track their tasks seamlessly, with features like user authentication, role-based access (admin/user), and task prioritization. As the platform grows, managing user data and tasks effectively becomes critical to ensure a smooth user experience. Your task is to design and manage the TaskMaster database, ensuring it operates efficiently and supports the application's needs. Here's the journey you'll embark on to achieve this.
 
-In order to view the result of your query after execution, you can write them in below manner:
+Note:
+1. In order to view the result of your query after execution, you can write them in below manner:
 
 const result = <Your Query>
 console.log(result)
 
+-- but before evaluating remove the print statement along with the result variable. Only keep <Your Query> in .js files
+2. Consider the current date as 20th May 2025(in ISO 8601 format) 
+3. All the updation and deletion related queries will be checked against the initial state of the database after running the populate.js code.
 ---
 
 Part 1: Setting Up TaskMaster Database
@@ -29,7 +33,7 @@ Part 2: Querying for User and Task Insights
 TaskMaster wants to understand its users better, optimize task management, and enhance user satisfaction. You need to extract meaningful insights from the data to support these goals. These queries will help TaskMaster make informed decisions. Write the necessary queries in query1.js, query2.js, and query3.js files respectively.
 
 1. Retrieve all todos in the Todos collection that belong to a specific user with id 2 and have a status of "pending". Ensure the output includes todo_id, title, due_date, and priority.
-2. Find all todos with a priority of "high" and a due_date within the next 30 days (from the current date). Include todo_id, user_id, title, and due_date in the output.
+2. Find all todos with a priority of "medium" and a due_date within the next 30 days (from the current date). Include todo_id, user_id, title, and due_date in the output.
 3. Retrieve all users who have the role "admin". Ensure the output includes user_id, username, and email.
 
 ---
