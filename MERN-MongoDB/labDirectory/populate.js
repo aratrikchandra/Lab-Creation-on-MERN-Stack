@@ -1,7 +1,7 @@
 // Remove all data from the collections
 db.Users.deleteMany({});
 db.Todos.deleteMany({});
-
+db.Categories.deleteMany({});
 
 // Populate the Users collection with essential fields
 db.Users.insertMany([
@@ -406,5 +406,34 @@ db.Todos.insertMany([
         due_date: new Date("2025-05-05"),
         priority: "medium",
         created_at: new Date("2024-04-12")
+    }
+]);
+
+
+// Populate the Categories collection with sample data
+db.Categories.insertMany([
+    { 
+        category_id: 1,
+        todo_id: 1,
+        category_name: "Work",
+        color_code: "#FF5733"
+    },
+    { 
+        category_id: 2,
+        todo_id: 2,
+        category_name: "Personal",
+        color_code: "#33FF57"
+    },
+    { 
+        category_id: 3,
+        todo_id: 3,
+        category_name: "Work",
+        color_code: "#FF5733"
+    },
+    { 
+        category_id: 4,
+        todo_id: 4,
+        category_name: "Learning",
+        color_code: "#3357FF"
     }
 ]);

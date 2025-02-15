@@ -1,9 +1,4 @@
-const currentDate = new Date('2025-05-20T00:00:00Z');
-const sixtyDaysAgo = new Date(currentDate.getTime() - 60 * 24 * 60 * 60 * 1000);
-const result = db.Todos.deleteMany({
-    $or: [
-        { status: "completed" },
-        { created_at: { $lte: sixtyDaysAgo } }
-    ]
-});
-console.log(result)
+const query = { user_id: 4 };
+const update = { $set: { username: "jhon", email: "jhon@yahoo.com", role: "admin" } };
+const result = await users.updateOne(query, update);
+console.log(`${result.modifiedCount} user updated.`);

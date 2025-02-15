@@ -1,3 +1,7 @@
-const result = db.Users.updateOne({ user_id: 4 }, { $set: { username: "jhon", email: "jhon@yahoo.com", role: "admin" } });
+const currentDate = new Date();
+const next7Days = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-console.log(result)
+const query = { status: "pending", due_date: { $gte: currentDate, $lte: next7Days } };
+const update = { $set: { priority: "high" } };
+const result = await todos.updateMany(query, update);
+console.log(`${result.modifiedCount} todos updated.`);
