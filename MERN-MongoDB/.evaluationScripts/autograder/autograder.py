@@ -12,9 +12,9 @@ RESULT_FILE = '../evaluate.json'
 SUCCESS_MESSAGE = "Test case passed :)"
 FAIL_MESSAGE = "Test case failed!"
 
-NUM_TEST_CASES = 7
-test_ids = [1, 2, 3, 4, 5, 6, 7]
-maximum_marks = [1, 1, 1, 1, 1, 1, 1]
+NUM_TEST_CASES = 9
+test_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+maximum_marks = [1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 NEW_DB_PATH = '/data/db27018'
 LOG_PATH = f'{NEW_DB_PATH}/mongod.log'
@@ -29,7 +29,8 @@ def is_mongodb_running(port=27018):
 
 def start_mongo_instance(port):
     os.makedirs(NEW_DB_PATH, exist_ok=True)
-    result = subprocess.run(['mongod', '--port', str(port), '--dbpath', NEW_DB_PATH, '--fork', '--logpath', LOG_PATH, '--bind_ip_all'])
+    result = subprocess.run(['mongod', '--port', str(port), '--dbpath', NEW_DB_PATH,
+                               '--fork', '--logpath', LOG_PATH, '--bind_ip_all'])
     if result.returncode != 0:
         print(f"Failed to start mongod on port {port}")
         exit(1)
@@ -52,7 +53,7 @@ def wait_for_mongodb_to_start(port, timeout=10):
     start_time = time.time()
     while True:
         try:
-            client = MongoClient(f'localhost', port)
+            client = MongoClient('localhost', port)
             client.admin.command('ping')
             client.close()
             print(f"MongoDB started on port {port}")
@@ -77,17 +78,21 @@ def stop_mongodb_instance(port):
         except Exception as e:
             print(f"Unexpected error occurred while shutting down MongoDB on port {port}: {e}")
             break
-        
+
 def print_and_save_documents(collection, output_file_path):
+    # Fetch all documents without the _id field and write each document on a new line
+    documents = list(collection.find({}, {'_id': 0}))
     with open(output_file_path, 'w') as file:
-         for document in collection.find({}, {'_id': 0}):
+        for document in documents:
             file.write(str(document) + '\n')
 
 def execute_mongo_script(database_url, script_path, output_file):
-    if output_file == "":
-        command = f'mongosh --host localhost --port 27018 TaskMaster {script_path}'
+    # If an output file is specified, redirect using --quiet and --eval to capture printed result
+    if output_file:
+        script_content = open(script_path).read().replace('\n', ' ')
+        command = f'mongosh --host localhost --port 27018 TaskMaster --quiet --eval "{script_content}" > {output_file}'
     else:
-        command = f'mongosh --host localhost --port 27018 TaskMaster --quiet --eval "{open(script_path).read()}" > {output_file}'
+        command = f'mongosh --host localhost --port 27018 TaskMaster {script_path}'
     process = os.popen(command)
     output = process.read()
     process.close()
@@ -108,159 +113,99 @@ def main():
         print(f"MongoDB is not running on port {port}, starting new instance...")
         process = start_mongo_instance(port)
 
-    results = [{
-        'testid': test_ids[i],
-        'maximum_marks': maximum_marks[i],
-        'score': 0,
-        'message': FAIL_MESSAGE
-    } for i in range(NUM_TEST_CASES)]
-
     if not wait_for_mongodb_to_start(port):
         if process is not None:
             try:
                 stop_mongodb_instance(port)
             finally:
                 print(f"Stopped MongoDB instance at port {port}")
-        return
+        exit(1)
 
-    client = MongoClient('localhost', 27018)
+    client = MongoClient('localhost', port)
     db = client.TaskMaster
 
-    output_file_path = "output.txt"
-    database_url = "localhost:27018/TaskMaster"
-
-    # Check if Users and Todos collections exist
+    # Check for required collections: Users, Todos, and Categories
     collection_list = db.list_collection_names()
-    required_collections = ['Users', 'Todos']
+    required_collections = ['Users', 'Todos', 'Categories']
     missing_collections = [col for col in required_collections if col not in collection_list]
     if missing_collections:
-        for result in results:
-            result['message'] = f"Collections {', '.join(missing_collections)} do not exist in database TaskMaster."
+        results = []
+        for t in test_ids:
+            results.append({
+                'testid': t,
+                'maximum_marks': 1,
+                'score': 0,
+                'message': f"Collections {', '.join(missing_collections)} do not exist in database TaskMaster."
+            })
         with open(RESULT_FILE, "w", encoding="utf-8") as f:
             json.dump({'data': results}, f, indent=4)
         client.close()
         stop_mongodb_instance(port)
-        return
+        exit(1)
 
-    # Test Cases 2-7
-    for i in range(0, NUM_TEST_CASES):
-        init_script_path = "./populate.js"  # Path to the JavaScript file containing the MongoDB commands
-        execute_mongo_script(database_url, init_script_path, "")  # To reset database
-
-        if i == 0:
-            check = False
-            try:
-                script_path = f'{QUERY_DIR}/query1.js'
-                execute_mongo_script(database_url, script_path, output_file_path)
-                file_path = f'{OUTPUT_DIR}/output1.txt'
-                check = compare_files(output_file_path, file_path)
-            finally:
-                if check == True:
-                    print("Success")
-                    results[i]['score'] = 1
-                    results[i]['message'] = SUCCESS_MESSAGE
-                else:
-                    print('Not success')
-        elif i == 1:
-            check = False
-            try:
-                script_path = f'{QUERY_DIR}/query2.js'
-                execute_mongo_script(database_url, script_path, output_file_path)
-                file_path = f'{OUTPUT_DIR}/output2.txt'
-                check = compare_files(output_file_path, file_path)
-            finally:
-                if check == True:
-                    print("Success")
-                    results[i]['score'] = 1
-                    results[i]['message'] = SUCCESS_MESSAGE
-                else:
-                    print('Not success')
-
-        elif i == 2:
-            try:
-                script_path = f'{QUERY_DIR}/query3.js'
-                execute_mongo_script(database_url, script_path, output_file_path)
-                file_path = f'{OUTPUT_DIR}/output3.txt'
-                check = compare_files(output_file_path, file_path)
-            finally:
-                if check == True:
-                    print("Success")
-                    results[i]['score'] = 1
-                    results[i]['message'] = SUCCESS_MESSAGE
-                else:
-                    print('Not success')
-
-        elif i == 3:
-            try:
-                execute_mongo_script(database_url, init_script_path, "")
-                collection = db.Todos
-                script_path = f'{QUERY_DIR}/query4.js'
-                execute_mongo_script(database_url, script_path, "")
-                print_and_save_documents(collection, output_file_path)
-                file_path = f'{OUTPUT_DIR}/output4.txt'
-                check = compare_files(output_file_path, file_path)
-            finally:
-                if check == True:
-                    print("Success")
-                    results[i]['score'] = 1
-                    results[i]['message'] = SUCCESS_MESSAGE
-                else:
-                    print('Not success')
-
-        elif i == 4:
-            try:
-                execute_mongo_script(database_url, init_script_path, "")
-                collection = db.Users
-                script_path = f'{QUERY_DIR}/query5.js'
-                execute_mongo_script(database_url, script_path, "")
-                print_and_save_documents(collection, output_file_path)
-                file_path = f'{OUTPUT_DIR}/output5.txt'
-                check = compare_files(output_file_path, file_path)
-            finally:
-                if check == True:
-                    print("Success")
-                    results[i]['score'] = 1
-                    results[i]['message'] = SUCCESS_MESSAGE
-                else:
-                    print('Not success')
-
-        elif i == 5:
-            try:
-                execute_mongo_script(database_url, init_script_path, "")
-                collection = db.Todos
-                script_path = f'{QUERY_DIR}/query6.js'
-                execute_mongo_script(database_url, script_path, "")
-                print_and_save_documents(collection, output_file_path)
-                file_path = f'{OUTPUT_DIR}/output6.txt'
-                check = compare_files(output_file_path, file_path)
-            finally:
-                if check == True:
-                    print("Success")
-                    results[i]['score'] = 1
-                    results[i]['message'] = SUCCESS_MESSAGE
-                else:
-                    print('Not success')
-
-        elif i == 6:
-            try:
-                execute_mongo_script(database_url, init_script_path, "")
-                collection = db.Users
-                script_path = f'{QUERY_DIR}/query7.js'
-                execute_mongo_script(database_url, script_path, "")
-                print_and_save_documents(collection, output_file_path)
-                file_path = f'{OUTPUT_DIR}/output7.txt'
-                check = compare_files(output_file_path, file_path)
-            finally:
-                if check == True:
-                    print("Success")
-                    results[i]['score'] = 1
-                    results[i]['message'] = SUCCESS_MESSAGE
-                else:
-                    print('Not success')
-
+    # Generate ideal outputs before evaluation
+    print("Generating ideal outputs using generate_outputs.py ...")
+    subprocess.run(['python3', 'generate_outputs.py'], check=True)
+    
+    results = [{
+        'testid': test_ids[i],
+        'maximum_marks': maximum_marks[i],
+        'score': 0,
+        'message': FAIL_MESSAGE
+    } for i in range(NUM_TEST_CASES)]
+    
+    output_file_path = "output.txt"
+    database_url = "localhost:27018/TaskMaster"
+    init_script_path = "./populate.js"
+    
+    # Test cases 1-4: Read/aggregation queries
+    for i in range(4):
+        # Reset the database for each test
+        execute_mongo_script(database_url, init_script_path, "")
+        script_path = f'{QUERY_DIR}/query{i+1}.js'
+        if i < 3:
+            # Queries 1,2,3 are executed with output redirection
+            execute_mongo_script(database_url, script_path, output_file_path)
+        else:
+            # For query4, execute and then dump the Todos collection as per join query implementation
+            execute_mongo_script(database_url, script_path, "")
+            print_and_save_documents(db.Todos, output_file_path)
+        expected_file = f'{OUTPUT_DIR}/output{i+1}.txt'
+        check = compare_files(output_file_path, expected_file)
+        if check:
+            print("Success")
+            results[i]['score'] = 1
+            results[i]['message'] = SUCCESS_MESSAGE
+        else:
+            print("Not success")
+    
+    # Test cases 5-9: Update and delete queries (check collection state after execution)
+    # Mapping: query5 affects Todos, query6 affects Users, query7 affects Categories,
+    # query8 affects Todos, query9 affects Users.
+    update_tests = [
+        (4, f'{QUERY_DIR}/query5.js', db.Todos, f'{OUTPUT_DIR}/output5.txt'),
+        (5, f'{QUERY_DIR}/query6.js', db.Users, f'{OUTPUT_DIR}/output6.txt'),
+        (6, f'{QUERY_DIR}/query7.js', db.Categories, f'{OUTPUT_DIR}/output7.txt'),
+        (7, f'{QUERY_DIR}/query8.js', db.Todos, f'{OUTPUT_DIR}/output8.txt'),
+        (8, f'{QUERY_DIR}/query9.js', db.Users, f'{OUTPUT_DIR}/output9.txt')
+    ]
+    for idx, script, collection, expected_file in update_tests:
+        execute_mongo_script(database_url, init_script_path, "")  # Reset DB
+        execute_mongo_script(database_url, script, "")
+        # Dump the entire state of the affected collection (excluding _id) to the output file
+        print_and_save_documents(collection, output_file_path)
+        check = compare_files(output_file_path, expected_file)
+        if check:
+            print("Success")
+            results[idx]['score'] = 1
+            results[idx]['message'] = SUCCESS_MESSAGE
+        else:
+            print("Not success")
+    
     client.close()
     with open(RESULT_FILE, "w", encoding="utf-8") as f:
         json.dump({'data': results}, f, indent=4)
+    stop_mongodb_instance(port)
 
 if __name__ == "__main__":
     main()
