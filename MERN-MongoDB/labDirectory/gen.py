@@ -10,15 +10,20 @@ def get_random_date(start, end):
     random_second = random.randrange(int(delta.total_seconds()))
     return start + timedelta(seconds=random_second)
 
+def get_custom_email(username):
+    domains = ["gmail.com", "hotmail.com", "rediffmail.com", "yahoo.com", "outlook.com"]
+    return f"{username}@{random.choice(domains)}"
+
 # Generate 20 users
 users = []
 for i in range(1, 21):
+    username = fake.user_name()
     users.append({
         "user_id": i,
-        "username": fake.user_name(),
-        "email": fake.email(),
+        "username": username,
+        "email": get_custom_email(username),
         "password_hash": fake.password(),
-        "role": "admin" if i == 1 else "user",
+        "role": "admin" if i % 5 == 1 else "user"
     })
 
 # Generate 50 todos
@@ -26,7 +31,7 @@ todos = []
 current_date = datetime.now()
 for i in range(1, 51):
     user_id = random.randint(1, 20)
-    created_at = get_random_date(current_date - timedelta(days=65), current_date)
+    created_at = get_random_date(current_date - timedelta(days=75), current_date)
     due_date = get_random_date(
         created_at + timedelta(days=1),
         created_at + timedelta(days=90)

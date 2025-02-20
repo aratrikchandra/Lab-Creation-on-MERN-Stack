@@ -13,8 +13,8 @@ SUCCESS_MESSAGE = "Test case passed :)"
 FAIL_MESSAGE = "Test case failed!"
 
 NUM_TEST_CASES = 9
-test_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-maximum_marks = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+test_ids = list(range(1, 10))
+maximum_marks = [1] * 9
 
 NEW_DB_PATH = '/data/db27018'
 LOG_PATH = f'{NEW_DB_PATH}/mongod.log'
@@ -71,24 +71,32 @@ def stop_mongodb_instance(port):
         try:
             client.admin.command('shutdown')
             print(f"MongoDB instance on port {port} shut down successfully")
-            break
-        except (errors.AutoReconnect, errors.ServerSelectionTimeoutError) as e:
-            print(f"Failed to shutdown MongoDB on port {port}: {e}")
-            time.sleep(1)
+            return
+        except errors.ServerSelectionTimeoutError as e:
+            # If we hit a timeout, assume the instance has already shut down.
+            print(f"Server selection timeout reached while attempting shutdown on port {port}. Assuming instance is down.")
+            return
+        except errors.ConnectionFailure as e:
+            # If connection is refused, consider it as already shut down.
+            if "Connection refused" in str(e):
+                print(f"MongoDB instance on port {port} appears to be already shut down (connection refused).")
+                return
+            else:
+                print(f"Failed to shutdown MongoDB on port {port}: {e}")
+                time.sleep(1)
         except Exception as e:
             print(f"Unexpected error occurred while shutting down MongoDB on port {port}: {e}")
-            break
+            return
 
 def print_and_save_documents(collection, output_file_path):
-    # Fetch all documents without the _id field and write each document on a new line
     documents = list(collection.find({}, {'_id': 0}))
     with open(output_file_path, 'w') as file:
-        for document in documents:
+         for document in documents:
             file.write(str(document) + '\n')
 
 def execute_mongo_script(database_url, script_path, output_file):
-    # If an output file is specified, redirect using --quiet and --eval to capture printed result
     if output_file:
+        # Replace newlines for proper command line processing.
         script_content = open(script_path).read().replace('\n', ' ')
         command = f'mongosh --host localhost --port 27018 TaskMaster --quiet --eval "{script_content}" > {output_file}'
     else:
@@ -118,9 +126,15 @@ def main():
             try:
                 stop_mongodb_instance(port)
             finally:
-                print(f"Stopped MongoDB instance at port {port}")
+                print(f"Stopped MongoDB instance on port {port}")
         exit(1)
 
+    init_script_path = "./populate.js"
+    database_url = "localhost:27018/TaskMaster"
+    output_file_path = "output.txt"
+
+    
+    execute_mongo_script(database_url, init_script_path, "")
     client = MongoClient('localhost', port)
     db = client.TaskMaster
 
@@ -154,34 +168,27 @@ def main():
         'message': FAIL_MESSAGE
     } for i in range(NUM_TEST_CASES)]
     
-    output_file_path = "output.txt"
-    database_url = "localhost:27018/TaskMaster"
-    init_script_path = "./populate.js"
     
     # Test cases 1-4: Read/aggregation queries
     for i in range(4):
-        # Reset the database for each test
+        # Reset the database for each test.
         execute_mongo_script(database_url, init_script_path, "")
         script_path = f'{QUERY_DIR}/query{i+1}.js'
         if i < 3:
-            # Queries 1,2,3 are executed with output redirection
             execute_mongo_script(database_url, script_path, output_file_path)
         else:
-            # For query4, execute and then dump the Todos collection as per join query implementation
             execute_mongo_script(database_url, script_path, "")
             print_and_save_documents(db.Todos, output_file_path)
         expected_file = f'{OUTPUT_DIR}/output{i+1}.txt'
         check = compare_files(output_file_path, expected_file)
         if check:
-            print("Success")
+            print(f"Test case {test_ids[i]} Success")
             results[i]['score'] = 1
             results[i]['message'] = SUCCESS_MESSAGE
         else:
-            print("Not success")
+            print(f"Test case {test_ids[i]} Not success")
     
-    # Test cases 5-9: Update and delete queries (check collection state after execution)
-    # Mapping: query5 affects Todos, query6 affects Users, query7 affects Categories,
-    # query8 affects Todos, query9 affects Users.
+    # Test cases 5-9: Update and delete queries (final state check)
     update_tests = [
         (4, f'{QUERY_DIR}/query5.js', db.Todos, f'{OUTPUT_DIR}/output5.txt'),
         (5, f'{QUERY_DIR}/query6.js', db.Users, f'{OUTPUT_DIR}/output6.txt'),
@@ -190,17 +197,16 @@ def main():
         (8, f'{QUERY_DIR}/query9.js', db.Users, f'{OUTPUT_DIR}/output9.txt')
     ]
     for idx, script, collection, expected_file in update_tests:
-        execute_mongo_script(database_url, init_script_path, "")  # Reset DB
+        execute_mongo_script(database_url, init_script_path, "")
         execute_mongo_script(database_url, script, "")
-        # Dump the entire state of the affected collection (excluding _id) to the output file
         print_and_save_documents(collection, output_file_path)
         check = compare_files(output_file_path, expected_file)
         if check:
-            print("Success")
+            print(f"Test case {test_ids[idx]} Success")
             results[idx]['score'] = 1
             results[idx]['message'] = SUCCESS_MESSAGE
         else:
-            print("Not success")
+            print(f"Test case {test_ids[idx]} Not success")
     
     client.close()
     with open(RESULT_FILE, "w", encoding="utf-8") as f:

@@ -16,8 +16,8 @@ TaskMaster has just launched, and you are tasked with setting up the foundationa
 
 Database and Collection Setup:
 
-To create a new database called TaskMaster and create the following collections within TaskMaster: Users, Todos, and Categories, along with populating all the collections created, run the command:
-mongosh localhost:27017/TaskMaster populate.js
+To create a new database called TaskMaster and create the following collections within TaskMaster: Users, Todos, and Categories, along with populating all the collections created, run the script populate.sh present in labDirectory.
+
 
 This command can be used to reset the TaskMaster database to its initial state.
 
@@ -27,10 +27,10 @@ Part 2: Querying for User and Task Insights
 
 TaskMaster wants to understand its users better, optimize task management, and enhance user satisfaction. You need to extract meaningful insights from the data to support these goals. These queries will help TaskMaster make informed decisions. Write the necessary queries in query1.js, query2.js, query3.js and query4.js files respectively.
 
-1. Retrieve all todos in the Todos collection that belong to a specific user with id 2 and have a status of "pending". Ensure the output includes todo_id, title, due_date, and priority.
+1. Retrieve all todos in the Todos collection that have a status of "pending". Ensure the output includes todo_id, title, due_date, and priority.
 2. Find all todos with a priority of "medium" and a due_date within the next 30 days (from the current date). Include todo_id, user_id, title, and due_date in the output.
 3. Retrieve all users who have the role "admin". Ensure the output includes user_id, username, and email.
-4. Find all todos which belong to "Work" category. Ensure the output includes todo_id, title, category_id, .
+4. Find all todos which belong to "Work" category. Ensure the output includes todo_id, title, category_id.
 
 
 ---

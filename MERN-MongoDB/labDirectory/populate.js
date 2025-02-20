@@ -1,7 +1,9 @@
+const fs = require('fs');
+
 // Read data from JSON files
-const users = JSON.parse(cat("users.json"));
-const todos = JSON.parse(cat("todos.json"));
-const categories = JSON.parse(cat("categories.json"));
+const users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
+const todos = JSON.parse(fs.readFileSync('todos.json', 'utf8'));
+const categories = JSON.parse(fs.readFileSync('categories.json', 'utf8'));
 
 // Remove all data from the collections
 db.Users.deleteMany({});

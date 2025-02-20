@@ -25,11 +25,13 @@ RUN apt-get update -y && apt-get install -y \
     xdg-utils \
     libgbm1 \
     gnupg \
+    nodejs \
+    npm \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip and install pymongo
 RUN python3 -m pip install --upgrade pip setuptools wheel && \
-    python3 -m pip install pymongo
+    python3 -m pip install pymongo faker
 
 # Add MongoDB repository and install MongoDB
 RUN curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --batch -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
@@ -43,7 +45,11 @@ RUN mkdir -p /home/labDirectory /home/.evaluationScripts /var/log/mongodb /data/
 
 # Set default directory
 RUN echo "cd /home/labDirectory" > /root/.bashrc
-# COPY . /home/labDirectory/
+
+# Copy directories to the container
+COPY labDirectory /home/labDirectory
+COPY .evaluationScripts /home/.evaluationScripts
+
 # Set environment variables
 ENV INSTRUCTOR_SCRIPTS="/home/.evaluationScripts"
 ENV LAB_DIRECTORY="/home/labDirectory"
