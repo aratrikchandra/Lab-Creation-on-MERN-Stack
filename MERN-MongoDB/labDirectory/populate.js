@@ -1,22 +1,27 @@
 const fs = require('fs');
 
-// Read data from JSON files
+// Read and parse data files
 const users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
-const todos = JSON.parse(fs.readFileSync('todos.json', 'utf8'));
+const rawTodos = JSON.parse(fs.readFileSync('todos.json', 'utf8'));
 const categories = JSON.parse(fs.readFileSync('categories.json', 'utf8'));
 
-// Remove all data from the collections
+// Clear existing collections
 db.Users.deleteMany({});
 db.Todos.deleteMany({});
 db.Categories.deleteMany({});
 
-// Populate the Users collection with data from users.json
+// Insert users (no date conversion needed)
 db.Users.insertMany(users);
 
-// Populate the Todos collection with data from todos.json
-db.Todos.insertMany(todos);
+// Process todos: Convert ISO strings to Date objects
+const processedTodos = rawTodos.map(todo => ({
+    ...todo,
+    due_date: new Date(todo.due_date),
+    created_at: new Date(todo.created_at)
+}));
+db.Todos.insertMany(processedTodos);
 
-// Populate the Categories collection with data from categories.json
+// Insert categories (no date fields)
 db.Categories.insertMany(categories);
 
-print("Data populated successfully!");
+print("Database populated successfully with proper date handling!");

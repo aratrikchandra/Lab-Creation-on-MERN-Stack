@@ -1,12 +1,10 @@
-const currentDate = new Date();
-const next7Days = new Date();
-next7Days.setDate(currentDate.getDate() + 7);
-
-const result = db.Todos.updateMany(
-  { 
-    status: "pending", 
-    due_date: { $gte: currentDate, $lte: next7Days }
-  },
-  { $set: { priority: "high" } }
-);
+const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+const result = db.Todos.updateMany({
+    $and: [
+        { status: "pending" },
+        { due_date: { $gte: new Date(), $lte: sevenDaysFromNow } }
+    ]
+}, {
+    $set: { priority: "high" }
+});
 console.log(result);

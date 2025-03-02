@@ -1,6 +1,6 @@
 import json
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from faker import Faker
 
 fake = Faker()
@@ -14,29 +14,41 @@ def get_custom_email(username):
     domains = ["gmail.com", "hotmail.com", "rediffmail.com", "yahoo.com", "outlook.com"]
     return f"{username}@{random.choice(domains)}"
 
-# Generate 20 users
+# Randomly decide the number of admin users (between 1 and 5)
+num_admin_users = random.randint(3, 6)
+# Select random user IDs to be admins
+admin_user_ids = random.sample(range(1, 21), num_admin_users)
+# Generate 20 users with random admin assignments
 users = []
 for i in range(1, 21):
     username = fake.user_name()
+    role = "admin" if i in admin_user_ids else "user"
     users.append({
         "user_id": i,
         "username": username,
         "email": get_custom_email(username),
         "password_hash": fake.password(),
-        "role": "admin" if i % 5 == 1 else "user"
+        "role": role
     })
 
-# Generate 50 todos
+
+# Generate 50 todos with proper date formatting
 todos = []
-current_date = datetime.now()
+current_date = datetime.now(timezone.utc)
 for i in range(1, 51):
     user_id = random.randint(1, 20)
-    created_at = get_random_date(current_date - timedelta(days=75), current_date)
+    created_at_start = current_date - timedelta(days=75)
+    created_at = get_random_date(created_at_start, current_date)
     due_date = get_random_date(
         created_at + timedelta(days=1),
         created_at + timedelta(days=90)
     )
-    # Generate todo-specific title and description
+    
+    # Format dates to MongoDB-compatible format
+    def format_date(dt):
+        return dt.astimezone(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
+
+    # Generate todo content
     task_type = fake.random_element(elements=("Work", "Personal", "Learning", "Official"))
     if task_type == "Work":
         title = f"Complete {fake.job().lower()} report"
@@ -57,9 +69,9 @@ for i in range(1, 51):
         "title": title,
         "description": description,
         "status": fake.random_element(elements=("pending", "in progress", "completed")),
-        "due_date": due_date.isoformat(),  # ISO 8601 format
+        "due_date": format_date(due_date),
         "priority": fake.random_element(elements=("low", "medium", "high")),
-        "created_at": created_at.isoformat(),  # ISO 8601 format
+        "created_at": format_date(created_at),
     })
 
 # Generate 100 categories
@@ -82,4 +94,4 @@ with open("todos.json", "w") as f:
 with open("categories.json", "w") as f:
     json.dump(categories, f, indent=2)
 
-print("Data generated and saved to users.json, todos.json, and categories.json")
+print("Data generated with proper date formatting!")
