@@ -24,4 +24,4 @@ db.Todos.insertMany(processedTodos);
 // Insert categories (no date fields)
 db.Categories.insertMany(categories);
 
-print("Database populated successfully with proper date handling!");
+print("Database populated successfully !!!");

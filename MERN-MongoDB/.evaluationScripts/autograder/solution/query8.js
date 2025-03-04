@@ -1,13 +1,7 @@
-const currentDate = new Date();
-const thresholdDate = new Date();
-thresholdDate.setDate(currentDate.getDate() - 60);
-
-const result = db.Todos.deleteMany(
-  { 
-    $or: [
+const query8 = db.Todos.deleteMany({
+  $or: [
       { status: "completed" },
-      { created_at: { $lt: thresholdDate } }
-    ]
-  }
-);
-console.log(result);
+      { created_at: { $lte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) }}
+  ]
+});
+console.log(query8);

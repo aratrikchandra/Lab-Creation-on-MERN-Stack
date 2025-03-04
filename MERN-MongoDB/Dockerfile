@@ -47,8 +47,8 @@ RUN mkdir -p /home/labDirectory /home/.evaluationScripts /var/log/mongodb /data/
 RUN echo "cd /home/labDirectory" > /root/.bashrc
 
 # Copy directories to the container
-COPY labDirectory /home/labDirectory
-COPY .evaluationScripts /home/.evaluationScripts
+# COPY labDirectory /home/labDirectory
+# COPY .evaluationScripts /home/.evaluationScripts
 
 # Set environment variables
 ENV INSTRUCTOR_SCRIPTS="/home/.evaluationScripts"

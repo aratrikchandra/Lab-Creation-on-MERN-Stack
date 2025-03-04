@@ -3,10 +3,8 @@ Problem Statement:
 Welcome to your new role as a database engineer at TaskMaster, a cutting-edge task management platform designed to help users organize their lives efficiently. TaskMaster allows users to create, manage, and track their tasks seamlessly, with features like user authentication, role-based access (admin/user), and task prioritization. As the platform grows, managing user data and tasks effectively becomes critical to ensure a smooth user experience. Your task is to design and manage the TaskMaster database, ensuring it operates efficiently and supports the application's needs. Here's the journey you'll embark on to achieve this.
 
 Note:
-1. In order to view the result of your query after execution, you can write them in the following manner:
-   const result = <Your Query>
-   console.log(result)
-3. All the updation and deletion related queries will be checked against the initial state of the database after running the populate.js code.
+1. Only write the query in a single statement, Do not add any print statements or extra js codes in the query files. 
+2. All the updation and deletion related queries will be checked against the initial state of the database after running the populate.js code.
 
 ---
 

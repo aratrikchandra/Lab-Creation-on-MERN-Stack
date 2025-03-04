@@ -94,4 +94,4 @@ with open("todos.json", "w") as f:
 with open("categories.json", "w") as f:
     json.dump(categories, f, indent=2)
 
-print("Data generated with proper date formatting!")
+print("Data generated !!!")

@@ -63,30 +63,67 @@ def wait_for_mongodb_to_start(port, timeout=10):
                 print(f"Failed to connect to MongoDB on port {port} within timeout period.")
                 return False
             time.sleep(1)
-
 def stop_mongodb_instance(port):
-    client = MongoClient('localhost', port)
-    retries = 3
-    for _ in range(retries):
+    try:
+        # Use aggressive timeout settings for connection attempts
+        client = MongoClient(
+            'localhost', 
+            port,
+            serverSelectionTimeoutMS=1000,  # Wait max 1s for server selection
+            connectTimeoutMS=2000           # Wait max 2s for connection
+        )
+        
+        # Quick check if server is responsive
         try:
-            client.admin.command('shutdown')
-            print(f"MongoDB instance on port {port} shut down successfully")
+            client.admin.command('ping')
+        except errors.ServerSelectionTimeoutError:
+            print(f"MongoDB on port {port} already down")
             return
-        except errors.ServerSelectionTimeoutError as e:
-            # If we hit a timeout, assume the instance has already shut down.
-            print(f"Server selection timeout reached while attempting shutdown on port {port}. Assuming instance is down.")
-            return
-        except errors.ConnectionFailure as e:
-            # If connection is refused, consider it as already shut down.
-            if "Connection refused" in str(e):
-                print(f"MongoDB instance on port {port} appears to be already shut down (connection refused).")
-                return
-            else:
-                print(f"Failed to shutdown MongoDB on port {port}: {e}")
-                time.sleep(1)
-        except Exception as e:
-            print(f"Unexpected error occurred while shutting down MongoDB on port {port}: {e}")
-            return
+            
+        # Force immediate shutdown
+        client.admin.command('shutdown', force=True)
+        print(f"Shutdown command sent to port {port}")
+        
+    except errors.ConnectionFailure as e:
+        if "Connection refused" in str(e):
+            print(f"MongoDB on port {port} already closed")
+        else:
+            print(f"Connection failure during shutdown: {e}")
+    except Exception as e:
+        print(f"Unexpected error during shutdown: {e}")
+    finally:
+        # Ensure client is closed
+        if 'client' in locals():
+            client.close()
+        
+    # Final verification (non-blocking)
+    time.sleep(0.5)  # Short wait before final check
+    if not is_mongodb_running(port):
+        print(f"Verified MongoDB on port {port} is down")
+              
+# def stop_mongodb_instance(port):
+#     client = MongoClient('localhost', port)
+#     retries = 2
+#     for _ in range(retries):
+#         try:
+#             client.admin.command('shutdown')
+#             print(f"MongoDB instance on port {port} shut down successfully")
+#             return
+#         except errors.ServerSelectionTimeoutError as e:
+#             # If we hit a timeout, assume the instance has already shut down.
+#             print(f"Server selection timeout reached while attempting shutdown on port {port}. Assuming instance is down.")
+#             return
+#         except errors.ConnectionFailure as e:
+#             # If connection is refused, consider it as already shut down.
+#             if "Connection refused" in str(e):
+#                 print(f"MongoDB instance on port {port} appears to be already shut down (connection refused).")
+#                 return
+#             else:
+#                 print(f"Failed to shutdown MongoDB on port {port}: {e}")
+#                 time.sleep(1)
+#         except Exception as e:
+#             print(f"Unexpected error occurred while shutting down MongoDB on port {port}: {e}")
+#             return
 
 def print_and_save_documents(collection, output_file_path):
     documents = list(collection.find({}, {'_id': 0}))
@@ -95,12 +132,10 @@ def print_and_save_documents(collection, output_file_path):
             file.write(str(document) + '\n')
 
 def execute_mongo_script(database_url, script_path, output_file):
-    if output_file:
-        # Replace newlines for proper command line processing.
-        script_content = open(script_path).read().replace('\n', ' ')
-        command = f'mongosh --host localhost --port 27018 TaskMaster --quiet --eval "{script_content}" > {output_file}'
-    else:
+    if output_file == "":
         command = f'mongosh --host localhost --port 27018 TaskMaster {script_path}'
+    else:
+        command = f'mongosh --host localhost --port 27018 TaskMaster --quiet --eval "const result = $(cat {script_path}); printjson(result.toArray());" > {output_file}'
     process = os.popen(command)
     output = process.read()
     process.close()
@@ -111,6 +146,8 @@ def compare_files(file1_path, file2_path):
         file1_contents = file1.read().strip()
         file2_contents = file2.read().strip()
         return file1_contents == file2_contents
+
+
 
 def main():
     port = 27018
@@ -147,7 +184,8 @@ def main():
         for t in test_ids:
             results.append({
                 'testid': t,
-                'maximum_marks': 1,
+                "status": "failure",
+                'maximum marks': 1,
                 'score': 0,
                 'message': f"Collections {', '.join(missing_collections)} do not exist in database TaskMaster."
             })
@@ -163,27 +201,24 @@ def main():
     
     results = [{
         'testid': test_ids[i],
-        'maximum_marks': maximum_marks[i],
+        "status": "failure",
+        'maximum marks': maximum_marks[i],
         'score': 0,
         'message': FAIL_MESSAGE
     } for i in range(NUM_TEST_CASES)]
-    
-    
+
+    # Reset the database for each test.
+    execute_mongo_script(database_url, init_script_path, "")
     # Test cases 1-4: Read/aggregation queries
     for i in range(4):
-        # Reset the database for each test.
-        execute_mongo_script(database_url, init_script_path, "")
         script_path = f'{QUERY_DIR}/query{i+1}.js'
-        if i < 3:
-            execute_mongo_script(database_url, script_path, output_file_path)
-        else:
-            execute_mongo_script(database_url, script_path, "")
-            print_and_save_documents(db.Todos, output_file_path)
+        execute_mongo_script(database_url, script_path, output_file_path)
         expected_file = f'{OUTPUT_DIR}/output{i+1}.txt'
         check = compare_files(output_file_path, expected_file)
         if check:
             print(f"Test case {test_ids[i]} Success")
             results[i]['score'] = 1
+            results[i]['status'] = "success"
             results[i]['message'] = SUCCESS_MESSAGE
         else:
             print(f"Test case {test_ids[i]} Not success")
@@ -204,6 +239,7 @@ def main():
         if check:
             print(f"Test case {test_ids[idx]} Success")
             results[idx]['score'] = 1
+            results[idx]['status'] = "success"
             results[idx]['message'] = SUCCESS_MESSAGE
         else:
             print(f"Test case {test_ids[idx]} Not success")
