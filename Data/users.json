@@ -1,0 +1,142 @@
+[
+  {
+    "user_id": 1,
+    "username": "evanssarah",
+    "email": "evanssarah@yahoo.com",
+    "password_hash": "li$2CWVyIU",
+    "role": "admin"
+  },
+  {
+    "user_id": 2,
+    "username": "lisa17",
+    "email": "lisa17@gmail.com",
+    "password_hash": "xXo4Qllm(8",
+    "role": "user"
+  },
+  {
+    "user_id": 3,
+    "username": "xburton",
+    "email": "xburton@hotmail.com",
+    "password_hash": "7hBHi3ll$4",
+    "role": "user"
+  },
+  {
+    "user_id": 4,
+    "username": "chaynes",
+    "email": "chaynes@outlook.com",
+    "password_hash": "gypA46MOH_",
+    "role": "user"
+  },
+  {
+    "user_id": 5,
+    "username": "christina80",
+    "email": "christina80@gmail.com",
+    "password_hash": "v*y2&Yd+hr",
+    "role": "admin"
+  },
+  {
+    "user_id": 6,
+    "username": "calvin65",
+    "email": "calvin65@rediffmail.com",
+    "password_hash": "Z%7nT0irYP",
+    "role": "admin"
+  },
+  {
+    "user_id": 7,
+    "username": "uholden",
+    "email": "uholden@outlook.com",
+    "password_hash": "lrWUP9N3!6",
+    "role": "user"
+  },
+  {
+    "user_id": 8,
+    "username": "kayla02",
+    "email": "kayla02@gmail.com",
+    "password_hash": "k80KJwFoV^",
+    "role": "admin"
+  },
+  {
+    "user_id": 9,
+    "username": "georgetiffany",
+    "email": "georgetiffany@hotmail.com",
+    "password_hash": ")6eS@pAr!j",
+    "role": "user"
+  },
+  {
+    "user_id": 10,
+    "username": "donna51",
+    "email": "donna51@outlook.com",
+    "password_hash": "4!Dy77mvSN",
+    "role": "user"
+  },
+  {
+    "user_id": 11,
+    "username": "jessicaevans",
+    "email": "jessicaevans@outlook.com",
+    "password_hash": "8N+U0Ah9CV",
+    "role": "user"
+  },
+  {
+    "user_id": 12,
+    "username": "raymondmay",
+    "email": "raymondmay@yahoo.com",
+    "password_hash": "(_4@0aIa#X",
+    "role": "user"
+  },
+  {
+    "user_id": 13,
+    "username": "tammynichols",
+    "email": "tammynichols@outlook.com",
+    "password_hash": "#_0ODs$brq",
+    "role": "user"
+  },
+  {
+    "user_id": 14,
+    "username": "jonesmichael",
+    "email": "jonesmichael@gmail.com",
+    "password_hash": "sxRy5LjeA@",
+    "role": "user"
+  },
+  {
+    "user_id": 15,
+    "username": "psnyder",
+    "email": "psnyder@outlook.com",
+    "password_hash": "&3Y0BsYlKK",
+    "role": "user"
+  },
+  {
+    "user_id": 16,
+    "username": "kingcindy",
+    "email": "kingcindy@hotmail.com",
+    "password_hash": "bo7W6o5+%%",
+    "role": "user"
+  },
+  {
+    "user_id": 17,
+    "username": "kevinrivas",
+    "email": "kevinrivas@yahoo.com",
+    "password_hash": "$MPYottei4",
+    "role": "user"
+  },
+  {
+    "user_id": 18,
+    "username": "dennis50",
+    "email": "dennis50@yahoo.com",
+    "password_hash": "$0qlECyvS^",
+    "role": "user"
+  },
+  {
+    "user_id": 19,
+    "username": "pamela28",
+    "email": "pamela28@yahoo.com",
+    "password_hash": "+@hmVoDd*3",
+    "role": "user"
+  },
+  {
+    "user_id": 20,
+    "username": "schwartzwendy",
+    "email": "schwartzwendy@yahoo.com",
+    "password_hash": "uk3Q_Uem5(",
+    "role": "user"
+  }
+]
