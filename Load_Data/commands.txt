@@ -1,0 +1,7 @@
+# Run these commands one by one
+
+node ./Data/User.js
+
+node ./Data/Todo.js
+
+node ./Data/Category.js

@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const todoSchema = new mongoose.Schema({
-    todo_id: { type: Number, required: true, unique: true },
     user_id: {
-        type: Number,
+        type: mongoose.Schema.ObjectId,
         ref: 'User',
         required: true,
     },

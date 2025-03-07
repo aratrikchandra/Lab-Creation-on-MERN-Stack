@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
-  category_id: { type: Number, required: true, unique: true },
   todo_id: {
-    type: Number,
+    type: mongoose.Schema.ObjectId,
     ref: 'Todo',
     required: true,
   },
