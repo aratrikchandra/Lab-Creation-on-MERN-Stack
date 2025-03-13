@@ -2,8 +2,13 @@ const Todo = require('../models/Todo')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
-const getAllTodos = async (req, res) => {
-  const todos = await Todo.find({ createdBy: req.user.userId }).sort('createdAt')
+// const getAllTodos = async (req, res) => {
+//   const todos = await Todo.find({});
+//   res.status(StatusCodes.OK).json({ todos, count: todos.length });
+// };
+
+const getAllTodosOfUser = async (req, res) => {
+  const todos = await Todo.find({ user_id: req.user.userId }).sort('created_at')
   res.status(StatusCodes.OK).json({ todos, count: todos.length })
 }
 const getTodo = async (req, res) => {
@@ -14,7 +19,7 @@ const getTodo = async (req, res) => {
 
   const todo = await Todo.findOne({
     _id: todoId,
-    createdBy: userId,
+    user_id: userId,
   })
   if (!todo) {
     throw new NotFoundError(`No todo with id ${todoId}`)
@@ -23,23 +28,24 @@ const getTodo = async (req, res) => {
 }
 
 const createTodo = async (req, res) => {
-  req.body.createdBy = req.user.userId
+  req.body.user_id = req.user.userId
+  // console.log(req.body)
   const todo = await Todo.create(req.body)
   res.status(StatusCodes.CREATED).json({ todo })
 }
 
 const updateTodo = async (req, res) => {
   const {
-    body: { company, position },
+    body: { title, due_date },
     user: { userId },
     params: { id: todoId },
   } = req
 
-  if (company === '' || position === '') {
-    throw new BadRequestError('Company or Position fields cannot be empty')
+  if (title === '' || due_date === '') {
+    throw new BadRequestError('Title or Due Date fields cannot be empty')
   }
   const todo = await Todo.findByIdAndUpdate(
-    { _id: todoId, createdBy: userId },
+    { _id: todoId, user_id: userId },
     req.body,
     { new: true, runValidators: true }
   )
@@ -57,7 +63,7 @@ const deleteTodo = async (req, res) => {
 
   const todo = await Todo.findByIdAndRemove({
     _id: todoId,
-    createdBy: userId,
+    user_id: userId,
   })
   if (!todo) {
     throw new NotFoundError(`No todo with id ${todoId}`)
@@ -68,7 +74,7 @@ const deleteTodo = async (req, res) => {
 module.exports = {
   createTodo,
   deleteTodo,
-  getAllTodos,
+  getAllTodosOfUser,
   updateTodo,
   getTodo,
 }

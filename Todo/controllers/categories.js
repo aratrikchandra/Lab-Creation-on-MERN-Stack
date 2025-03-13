@@ -6,24 +6,25 @@ const CustomError = require('../errors');
 
 
 const createCategory = async (req, res) => {
-  const { todo: todoId } = req.body;
-
-  const isValidTodo = await Todo.findOne({ _id: todoId });
+  const { todo_id: todoId } = req.body;
+  const { userID } = req.user;
+  const isValidTodo = await Todo.findOne({ _id: todoId , user_id: userID });
 
   if (!isValidTodo) {
-    throw new CustomError.NotFoundError(`No category with id : ${todoId}`);
+    throw new CustomError.NotFoundError(`No todo found with id : ${todoId}`);
   }
 
   const category = await Category.create(req.body);
   res.status(StatusCodes.CREATED).json({ category });
 };
-const getAllCategory = async (req, res) => {
-  const categories = await Category.find({});
+// const getAllCategory = async (req, res) => {
+//   const categories = await Category.find({});
 
-  res.status(StatusCodes.OK).json({ categories, count: categories.length });
-};
+//   res.status(StatusCodes.OK).json({ categories, count: categories.length });
+// };
 const getSingleCategory = async (req, res) => {
   const { id: categoryId } = req.params;
+  const { userID } = req.user;
 
   const category = await Category.findOne({ _id: categoryId });
 
@@ -31,13 +32,21 @@ const getSingleCategory = async (req, res) => {
     throw new CustomError.NotFoundError(`No category with id ${categoryId}`);
   }
 
+  const { todo_id: todoId } = category;
+
+  const isValidTodo = await Todo.findOne({ _id: todoId , user_id: userID });
+
+  if (!isValidTodo) {
+    throw new CustomError.NotFoundError(`No category with id ${categoryId}`);
+  }
   res.status(StatusCodes.OK).json({ category });
 };
 const updateCategory = async (req, res) => {
   const { id: categoryId } = req.params;
-  const { startAt, startDate, endDate , price} = req.body;
-  if (!startAt || !startDate || !endDate || !price) {
-    throw new CustomError.BadRequestError('Please provide all values : startAt, startDate, endDate, price');
+  const { category_name, color_code } = req.body;
+  const { userID } = req.user;
+  if (!category_name) {
+    throw new CustomError.BadRequestError('Please provide Category name');
   }
   const category = await Category.findOne({ _id: categoryId });
 
@@ -45,20 +54,37 @@ const updateCategory = async (req, res) => {
     throw new CustomError.NotFoundError(`No category with id ${categoryId}`);
   }
 
-  category.endDate = endDate;
-  category.startDate = startDate;
-  category.startAt = startAt;
-  category.price = price;
+  const { todo_id: todoId } = category;
+
+  const isValidTodo = await Todo.findOne({ _id: todoId , user_id: userID });
+
+  if (!isValidTodo) {
+    throw new CustomError.NotFoundError(`No category with id ${categoryId}`);
+  }
+
+  category.category_name = category_name;
+
+  if(color_code){
+    category.color_code = color_code;
+  }
 
   await category.save();
   res.status(StatusCodes.OK).json({ category });
 };
 const deleteCategory = async (req, res) => {
   const { id: categoryId } = req.params;
-
+  const { userID } = req.user;
   const category = await Category.findOne({ _id: categoryId });
 
   if (!category) {
+    throw new CustomError.NotFoundError(`No category with id ${categoryId}`);
+  }
+
+  const { todo_id: todoId } = category;
+
+  const isValidTodo = await Todo.findOne({ _id: todoId , user_id: userID });
+
+  if (!isValidTodo) {
     throw new CustomError.NotFoundError(`No category with id ${categoryId}`);
   }
 
@@ -68,16 +94,19 @@ const deleteCategory = async (req, res) => {
 
 const getSingleTodoCategories = async (req, res) => {
   const { id: todoId } = req.params;
+  const { userID } = req.user;
+  const isValidTodo = await Todo.findOne({ _id: todoId , user_id: userID });
+
+  if (!isValidTodo) {
+    throw new CustomError.NotFoundError(`No todo found with id : ${todoId}`);
+  }
   const categories = await Category.find({ todo: todoId });
   res.status(StatusCodes.OK).json({ categories, count: categories.length });
 };
 
 
-
-
 module.exports = {
     createCategory,
-    getAllCategory,
     getSingleCategory,
     updateCategory,
     deleteCategory,
