@@ -1,0 +1,162 @@
+[
+  {
+    "_id": "67dae734502bb5bd03a1ed3e",
+    "username": "user1",
+    "email": "user1@hotmail.com",
+    "password": "$2b$10$CwlJbXCUKecTKMjPahhoA.8.BwiKdZos0yFeovGGPiITzM3cGanDe",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed3f",
+    "username": "user2",
+    "email": "user2@gmail.com",
+    "password": "$2b$10$QrcFYQ5njIDKeZzfO823uuEB2as2nJvwprgmuy62FaKrRw/evDz8u",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed40",
+    "username": "user3",
+    "email": "user3@hotmail.com",
+    "password": "$2b$10$G2FdsjUQvZo1pWvPnY4nbOVYq75PASgFsQrEOI73nRSMnVn3R8Gf2",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed41",
+    "username": "user4",
+    "email": "user4@hotmail.com",
+    "password": "$2b$10$PqmXgWjuQSeHkg.qM4VAE.OUdSmyK.64cBVDI9reKRSeX3DFKaBu6",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed42",
+    "username": "user5",
+    "email": "user5@hotmail.com",
+    "password": "$2b$10$5Sv5nfogB0U3/zCHWhOdAeTM51.hSQGrUlkq8PIagYFvpyvYoBxV.",
+    "role": "admin",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed43",
+    "username": "user6",
+    "email": "user6@outlook.com",
+    "password": "$2b$10$Tdsvg9OonHKwbiNeG9c1IeX.mNe/GmLS3uGNd8x5rQZF/7OPfSG7a",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed44",
+    "username": "user7",
+    "email": "user7@gmail.com",
+    "password": "$2b$10$9Z8dBFXxq0hjd1Sr.rJyNOqg7ss/tCpJAGt8OEENsREMwROFQte62",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed45",
+    "username": "user8",
+    "email": "user8@yahoo.com",
+    "password": "$2b$10$99J9zMEY3Hk/pEGIbFonWe0GY/CwUqkA..r5sVThtzEIyLVKZFoAm",
+    "role": "admin",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed46",
+    "username": "user9",
+    "email": "user9@yahoo.com",
+    "password": "$2b$10$smnX3dTVezqAM2eHVXitJ.kI7w85LhjLhBp5ApiV6lEAt1wzTOrva",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed47",
+    "username": "user10",
+    "email": "user10@yahoo.com",
+    "password": "$2b$10$N01gRrSgghA1UHe5sz1iFerlZbnRtcF6Mp0HPWEt6j1t9etqGuXQ6",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed48",
+    "username": "user11",
+    "email": "user11@gmail.com",
+    "password": "$2b$10$.DAgJtl17p/fLPPDICe1me7L0AfE6tS1O32g.7rtt0iqKR69FLISm",
+    "role": "admin",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed49",
+    "username": "user12",
+    "email": "user12@yahoo.com",
+    "password": "$2b$10$n42f.BHkjmL9EADk3yGo5eUSeq8ZkXd7u.XIlt1bQUqC0mUqCMfyW",
+    "role": "admin",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed4a",
+    "username": "user13",
+    "email": "user13@gmail.com",
+    "password": "$2b$10$0URS8DzES9JBwizm8M8ecuiqjuEStGZt698XajsvLEoKyTAfGnrjm",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed4b",
+    "username": "user14",
+    "email": "user14@hotmail.com",
+    "password": "$2b$10$n2wKtVb08ghWjxyf1XzMJe/CR830HLtB5En1HVgY07b1tDYI.PSma",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed4c",
+    "username": "user15",
+    "email": "user15@hotmail.com",
+    "password": "$2b$10$y.ZY58armjYqd.feh0QgFeUUPtenm17qGDW//4Y2uFRCQzZCdqZUi",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed4d",
+    "username": "user16",
+    "email": "user16@hotmail.com",
+    "password": "$2b$10$mQ0MPNQBeV7n2XollWK0Oui9s8HrY5YE4UcgbcEYJdvppAFQ2SE1q",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed4e",
+    "username": "user17",
+    "email": "user17@gmail.com",
+    "password": "$2b$10$zJyXFrRl.YBmvHLQVGcXbOQjvsSC/sNualnEmgdzzT0K0Qb9CSE2q",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed4f",
+    "username": "user18",
+    "email": "user18@hotmail.com",
+    "password": "$2b$10$Td0bauMt2pYEqMD50xR1dOERptAwhsiHJc6c7gWLydJ3H09FScFNe",
+    "role": "user",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed50",
+    "username": "user19",
+    "email": "user19@outlook.com",
+    "password": "$2b$10$NnA0aFrOtgX0J2RCGhOeFeBo/u0uIqloaSC6NbPjD591wF7ECzSOC",
+    "role": "admin",
+    "__v": 0
+  },
+  {
+    "_id": "67dae734502bb5bd03a1ed51",
+    "username": "user20",
+    "email": "user20@yahoo.com",
+    "password": "$2b$10$28uSK9E1ah5fwwPOXqEDLO0aplBLeUww7T3t56n9lIZbHGHN2JbEm",
+    "role": "user",
+    "__v": 0
+  }
+]

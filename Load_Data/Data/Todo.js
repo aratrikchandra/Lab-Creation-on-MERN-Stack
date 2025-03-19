@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const fs = require('fs');
 const { faker } = require('@faker-js/faker');
 const User = require('../models/User');
 const Todo = require('../models/Todo');
@@ -18,7 +19,7 @@ async function main() {
         // Generate task content
         const taskType = faker.helpers.arrayElement(['Work', 'Personal', 'Learning', 'Official']);
         let title, description;
-        switch(taskType) {
+        switch (taskType) {
             case 'Work':
                 title = `Complete ${faker.person.jobTitle().toLowerCase()} report`;
                 description = `Submit to ${faker.person.fullName()}`;
@@ -49,8 +50,16 @@ async function main() {
         });
     }
 
-    await Todo.insertMany(todos);
+    // Insert data into the database and retrieve inserted documents
+    const insertedTodos = await Todo.insertMany(todos);
     console.log('Inserted 50 todos');
+
+    // Fetch all documents from the todos collection
+    const todos_full = await Todo.find({}).lean(); // Fetches plain JavaScript objects
+
+    // Save the todos to a file named todos.json
+    fs.writeFileSync('todos.json', JSON.stringify(todos_full, null, 2)); // Pretty-print with 2 spaces
+    console.log('All todos have been saved to todos.json');
 
     await mongoose.disconnect();
 }
